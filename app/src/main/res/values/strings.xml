@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">BankStatementReader</string>
-    <string name="total_expenses">Total Expenses:</string>
-    <string name="total_income">Total Income:</string>
+    <string name="expenses">Expenses</string>
+    <string name="income">Income</string>
 </resources>

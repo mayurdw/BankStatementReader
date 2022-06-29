@@ -17,7 +17,7 @@ class Repository {
             "2022/06/12,2022061203,DEBIT,,\"DEBIT\",\"FC06-0158-0524883-00 groceries\",-47.84\n" +
             "2022/06/15,2022061501,A/P,,\"CatSaver\",\"A/P rent\",-235.00\n" +
             "2022/06/15,2022061502,DEBIT,,\"DEBIT\",\"CARD 7515 SKINNY  AUCKLAND\",-9.00\n" +
-            "2022/06/15,2022061503,DEBIT,,\"DEBIT\",\"FC06-0158-0524883-00 thenk\",-50.00"
+            "2022/06/15,2022061503,DEBIT,,\"DEBIT\",\"FC06-0158-0524883-00 thenk\",50.00"
 
     private data class CsvItem (
         val amount: String

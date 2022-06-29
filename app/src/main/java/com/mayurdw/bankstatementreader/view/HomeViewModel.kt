@@ -1,12 +1,12 @@
-package com.mayurdw.bankstatementreader
+package com.mayurdw.bankstatementreader.view
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mayurdw.bankstatementreader.Repository
 
-class MainActivityViewModel : ViewModel() {
-
-    /* Mutable Live Data */
+class HomeViewModel : ViewModel() {
+    /* MutableLiveData */
     private val _totalExpenses : MutableLiveData<String> = MutableLiveData()
     private val _totalIncome : MutableLiveData<String> = MutableLiveData()
 
