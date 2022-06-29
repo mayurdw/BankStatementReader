@@ -15,6 +15,53 @@
         tools:context=".view.HomeFragment">
 
         <LinearLayout
+            android:id="@+id/month_switcher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            android:weightSum="3">
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:contentDescription="@string/left_arrow_to_navigate_to_previous_month"
+                android:minHeight="48dp"
+                app:srcCompat="@drawable/ic_baseline_arrow_back_ios_24" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@{viewModel.month.name()}"
+                style="@style/TextAppearance.Material3.BodyMedium"
+                tools:text="March"/>
+
+            <ImageButton
+                android:id="@+id/imageButton2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:contentDescription="@string/right_arrow_to_navigate_to_next_month"
+                android:minHeight="48dp"
+                app:srcCompat="@drawable/ic_baseline_arrow_forward_ios_24" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/month_summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -25,17 +72,31 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/month_switcher"
             app:layout_constraintVertical_bias="0.0">
 
-            <include layout="@layout/header_card_view"
-                app:amount = "@{viewModel.totalExpenses}"
-                app:label = "@{@string/expenses}"/>
+            <include
+                layout="@layout/header_card_view"
+                app:amount="@{viewModel.totalExpenses}"
+                app:label="@{@string/expenses}" />
 
-            <include layout="@layout/header_card_view"
-                app:amount = "@{viewModel.totalIncome}"
-                app:label = "@{@string/income}"/>
+            <include
+                layout="@layout/header_card_view"
+                app:amount="@{viewModel.totalIncome}"
+                app:label="@{@string/income}" />
 
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/trans_type_summary"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/month_summary" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
