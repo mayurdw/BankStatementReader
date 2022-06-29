@@ -1,6 +1,9 @@
 package com.mayurdw.bankstatementreader
 
 import java.text.DecimalFormat
+import java.time.LocalDate
+import java.time.Month
+import java.time.format.DateTimeFormatter
 
 class Repository {
     private val csvString = "2022/06/08,2022060801,A/P,,\"CatSaver\",\"A/P rent\",-235.00\n" +
@@ -19,12 +22,9 @@ class Repository {
             "2022/06/15,2022061502,DEBIT,,\"DEBIT\",\"CARD 7515 SKINNY  AUCKLAND\",-9.00\n" +
             "2022/06/15,2022061503,DEBIT,,\"DEBIT\",\"FC06-0158-0524883-00 thenk\",50.00"
 
-    private data class CsvItem (
-        val amount: String
-        )
-
     lateinit var totalIncome: String
     lateinit var totalExpenses: String
+    lateinit var month: Month
 
     init {
         calculateAmounts( getCsvItems() )
@@ -59,6 +59,10 @@ class Repository {
 
         for( line in csvString.split("\n")){
             val items = line.split(",")
+
+            val firstApiFormat = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+            val date = LocalDate.parse(items[0] , firstApiFormat)
+            month = date.month
 
             val csvItem = CsvItem(
                 amount = items[6]

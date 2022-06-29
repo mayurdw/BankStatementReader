@@ -26,5 +26,6 @@ class HomeViewModel : ViewModel() {
 
         _totalExpenses.value = repository.totalExpenses
         _totalIncome.value = repository.totalIncome
+        _month.value = repository.month
     }
 }
