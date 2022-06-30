@@ -1,8 +1,11 @@
-package com.mayurdw.bankstatementreader
+package com.mayurdw.bankstatementreader.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.mayurdw.bankstatementreader.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
