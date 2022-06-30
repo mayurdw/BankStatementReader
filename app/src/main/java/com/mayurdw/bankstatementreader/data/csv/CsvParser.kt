@@ -21,8 +21,8 @@ class CsvParser {
                     uniqueId = items[1].toInt(),
                     transType = items[2],
                     chequeNumber = items[3],
-                    payeeName = items[4],
-                    payMemo = items[5],
+                    payeeName = items[4].replace("\"",""),
+                    payMemo = items[5].replace("\"",""),
                     amount = items[6].toDouble()
                 )
             )
