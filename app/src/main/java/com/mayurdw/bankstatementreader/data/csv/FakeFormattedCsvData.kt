@@ -2,6 +2,7 @@ package com.mayurdw.bankstatementreader.data.csv
 
 object FakeFormattedCsvData {
     const val csvString =
+                "Date,Unique Id,Tran Type,Cheque Number,Payee,Memo,Amount\n" +
                 "2022/06/08,2022060801,A/P,,\"CatSaver\",\"A/P rent\",-235.00\n" +
                 "2022/06/08,2022060802,EFTPOS,,\"CW AKL LOWERQUEEN ST AUCKLAND\",\"EFTPOS\",-2.49\n" +
                 "2022/06/08,2022060803,DEBIT,,\"DEBIT\",\"FC38-9020-0796625-01 groceries\",-3.14\n" +
