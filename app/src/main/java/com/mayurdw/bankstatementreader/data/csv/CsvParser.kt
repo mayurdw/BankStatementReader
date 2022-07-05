@@ -3,15 +3,23 @@ package com.mayurdw.bankstatementreader.data.csv
 import androidx.annotation.VisibleForTesting
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
-import java.io.BufferedReader
-import java.io.BufferedWriter
-import java.io.File
-import java.io.FileWriter
-import java.nio.file.Paths
+import java.io.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class CsvParser {
+    private val temporaryFile: File = File("temporaryFile.csv")
+    private lateinit var csvItems: List<CsvItem>
+
+    fun getCsvItem(filePath: String) : List<CsvItem> {
+        val file = File(filePath)
+
+        this.reformatInputFile(BufferedReader(FileReader(file)), temporaryFile)
+
+        this.csvItems = getCsvItems(temporaryFile)
+
+        return this.csvItems
+    }
 
     @VisibleForTesting
     fun reformatInputFile(bufferedReader: BufferedReader, file: File) {

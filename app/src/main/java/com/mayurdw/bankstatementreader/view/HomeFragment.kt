@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.mayurdw.bankstatementreader.R
 import com.mayurdw.bankstatementreader.databinding.FragmentHomeBinding
+import com.mayurdw.bankstatementreader.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -1,15 +1,17 @@
-package com.mayurdw.bankstatementreader.view
+package com.mayurdw.bankstatementreader.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mayurdw.bankstatementreader.Repository
+import com.mayurdw.bankstatementreader.data.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.Month
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(): ViewModel() {
+class HomeViewModel @Inject constructor(
+    repository: Repository
+): ViewModel() {
     /* MutableLiveData */
     private val _totalExpenses : MutableLiveData<String> = MutableLiveData()
     private val _totalIncome : MutableLiveData<String> = MutableLiveData()
@@ -24,8 +26,6 @@ class HomeViewModel @Inject constructor(): ViewModel() {
 
     init {
         // Load data
-        val repository = Repository()
-
         _totalExpenses.value = repository.totalExpenses
         _totalIncome.value = repository.totalIncome
         _month.value = repository.month

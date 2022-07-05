@@ -39,7 +39,6 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     def lifecycle_version = "2.4.1"
     def arch_version = "2.1.0"
     def nav_version = "2.4.2"
@@ -47,8 +46,8 @@ dependencies {
     def hilt_version = "2.38.1"
     def drag_drop_version = "1.0.0"
 
-
     /* Core libraries */
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'com.google.android.material:material:1.6.1'
@@ -67,6 +66,7 @@ dependencies {
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
+    kapt "org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.4.2"
 
     /* Unit Tests */
     testImplementation 'junit:junit:4.13.2'
