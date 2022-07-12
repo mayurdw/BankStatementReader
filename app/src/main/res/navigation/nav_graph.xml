@@ -11,9 +11,4 @@
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home"/>
 
-    <fragment
-        android:id="@+id/add_file_fragment"
-        android:name="com.mayurdw.bankstatementreader.view.AddFileFragment"
-        android:label="Add CSV File"
-        tools:layout="@layout/fragment_add_file" />
 </navigation>
