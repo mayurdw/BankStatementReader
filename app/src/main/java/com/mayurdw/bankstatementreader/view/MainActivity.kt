@@ -1,7 +1,6 @@
 package com.mayurdw.bankstatementreader.view
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -17,14 +16,14 @@ import com.mayurdw.bankstatementreader.R
 import com.mayurdw.bankstatementreader.data.Repository
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
-import java.io.File
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class MainActivity @Inject constructor() : AppCompatActivity() {
 
-    @Inject lateinit var repository: Repository
+    @Inject
+    lateinit var repository: Repository
     private lateinit var previewRequest: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,23 +39,19 @@ class MainActivity @Inject constructor() : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         NavigationUI.setupWithNavController(toolbar, navHostFragment.navController)
 
-        previewRequest = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == RESULT_OK) {
+        previewRequest =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                if (it.resultCode == RESULT_OK) {
+                    val path = it.data!!.data
+                    Timber.d("Path = ${path?.path}, lastPathSegment = ${path?.lastPathSegment}")
 
-                val path = it.data!!.data
-                Timber.d("Path = ${path?.path}, lastPathSegment = ${path?.lastPathSegment}")
-
-                path?.let { filePath ->
-                    val inputStream = this@MainActivity.contentResolver.openInputStream(filePath)
-                    repository.readFile(inputStream = inputStream!! )
+                    path?.let { filePath ->
+                        val inputStream =
+                            this@MainActivity.contentResolver.openInputStream(filePath)
+                        repository.readFile(inputStream = inputStream!!)
+                    }
                 }
-
-//                if (path != null) {
-//                    Timber.d(path)
-//                    repository.readFile(filePath = path.)
-//                }
             }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

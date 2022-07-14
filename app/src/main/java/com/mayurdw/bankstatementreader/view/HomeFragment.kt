@@ -20,7 +20,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding : FragmentHomeBinding = DataBindingUtil.inflate(
+        val binding: FragmentHomeBinding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_home,
             container,
