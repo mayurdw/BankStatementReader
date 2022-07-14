@@ -1,11 +1,10 @@
 package com.mayurdw.bankstatementreader.view
 
-import android.R.attr
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -15,13 +14,17 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
 import com.mayurdw.bankstatementreader.R
+import com.mayurdw.bankstatementreader.data.Repository
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import java.io.File
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity @Inject constructor() : AppCompatActivity() {
 
+    @Inject lateinit var repository: Repository
     private lateinit var previewRequest: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +42,19 @@ class MainActivity : AppCompatActivity() {
 
         previewRequest = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
-                Timber.d(it.data!!.data!!.path)
+
+                val path = it.data!!.data
+                Timber.d("Path = ${path?.path}, lastPathSegment = ${path?.lastPathSegment}")
+
+                path?.let { filePath ->
+                    val inputStream = this@MainActivity.contentResolver.openInputStream(filePath)
+                    repository.readFile(inputStream = inputStream!! )
+                }
+
+//                if (path != null) {
+//                    Timber.d(path)
+//                    repository.readFile(filePath = path.)
+//                }
             }
         }
     }

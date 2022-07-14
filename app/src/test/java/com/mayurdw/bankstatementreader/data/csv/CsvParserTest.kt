@@ -32,7 +32,7 @@ internal class CsvParserTest {
     @Test
     fun sanityTests() {
         assertTrue(
-            this.csvParser.getCsvItems(this.originalFile).isEmpty()
+            this.csvParser.getCsvItems(this.originalFile.bufferedReader()).isEmpty()
         )
     }
 
@@ -43,7 +43,7 @@ internal class CsvParserTest {
 
 
         val listOfCsvItem: List<CsvItem> = this.csvParser.getCsvItems(
-            file = this.originalFile
+            bufferedReader = this.originalFile.bufferedReader()
         )
 
         assertEquals(listOfCsvItem.size, 1)
@@ -59,28 +59,9 @@ internal class CsvParserTest {
     fun getCsvItems_fullFile_successful() {
         this.originalFile.writeText(FakeFormattedCsvData.csvString)
         val listOfCsvItem: List<CsvItem> = this.csvParser.getCsvItems(
-            file = this.originalFile
+            bufferedReader = this.originalFile.bufferedReader()
         )
 
         assertEquals(listOfCsvItem.size, FakeFormattedCsvData.csvString.split("\n").size - 1)
-    }
-
-    @Test
-    fun reformatInputFile_fileReadSuccessFul() {
-        this.originalFile.writeText(
-            text = "Test" + System.lineSeparator() +
-                    "Test" + System.lineSeparator() +
-                    "Test" + System.lineSeparator() +
-                    "Test" + System.lineSeparator() +
-                    "Test" + System.lineSeparator() +
-                    "Test"
-        )
-
-        this.csvParser.reformatInputFile(
-            bufferedReader = BufferedReader(FileReader(this.originalFile)),
-            file = this.newFile
-        )
-
-        assertEquals("Test" + System.lineSeparator(), this.newFile.readText())
     }
 }

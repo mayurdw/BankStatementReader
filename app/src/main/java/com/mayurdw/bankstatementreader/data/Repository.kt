@@ -1,13 +1,20 @@
 package com.mayurdw.bankstatementreader.data
 
 import com.mayurdw.bankstatementreader.data.csv.CsvParser
+import timber.log.Timber
+import java.io.InputStream
 import java.time.Month
-import javax.inject.Inject
 
 class Repository {
-    @Inject lateinit var csvParser : CsvParser
+    private val csvParser : CsvParser = CsvParser()
 
     val totalIncome: String = "$300.00"
     val totalExpenses: String = "$500.00"
     val month: Month = Month.APRIL
+
+    fun readFile(inputStream: InputStream){
+        val csvItems = csvParser.getCsvItem(inputStream = inputStream)
+
+        Timber.d("${csvItems.size}")
+    }
 }
