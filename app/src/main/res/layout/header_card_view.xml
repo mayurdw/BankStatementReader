@@ -6,7 +6,7 @@
     <data>
         <variable
             name="amount"
-            type="String" />
+            type="Double" />
         <variable
             name="label"
             type="String" />
@@ -27,14 +27,14 @@
             android:orientation="vertical"
             android:gravity="center"
             android:weightSum="3">
-
+            <!-- TODO: Need to format the dollar amount -->
             <TextView
                 android:id="@+id/income"
                 style="@style/TextAppearance.MaterialComponents.Headline5"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="2"
-                android:text="@{ amount }"
+                android:text="@{ amount.toString() }"
                 tools:text="$500.00" />
 
             <TextView

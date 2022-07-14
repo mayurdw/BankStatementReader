@@ -8,6 +8,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
@@ -15,6 +16,7 @@ import androidx.navigation.ui.onNavDestinationSelected
 import com.mayurdw.bankstatementreader.R
 import com.mayurdw.bankstatementreader.data.Repository
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -45,10 +47,12 @@ class MainActivity @Inject constructor() : AppCompatActivity() {
                     val path = it.data!!.data
                     Timber.d("Path = ${path?.path}, lastPathSegment = ${path?.lastPathSegment}")
 
+                    // TODO: There should be no need to read file here, it should just be stored somewhere.
+                    //  Also move this to a coroutine if possible
                     path?.let { filePath ->
                         val inputStream =
                             this@MainActivity.contentResolver.openInputStream(filePath)
-                        repository.readFile(inputStream = inputStream!!)
+                            repository.receivedFile(inputStream = inputStream!!)
                     }
                 }
             }
