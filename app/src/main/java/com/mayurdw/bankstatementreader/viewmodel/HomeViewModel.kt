@@ -5,10 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mayurdw.bankstatementreader.data.Repository
+import com.mayurdw.bankstatementreader.model.Transaction
 import com.mayurdw.bankstatementreader.util.formatInCurrencyFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.time.LocalDate
 import java.time.Month
 import javax.inject.Inject
 
@@ -21,19 +25,44 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val repository: Repository
-): ViewModel() {
+) : ViewModel() {
     /* MutableLiveData */
-    private val _month : MutableLiveData<Month> = MutableLiveData(Month.APRIL)
+    private val _totalExpenses: MutableLiveData<String> =
+        MutableLiveData(0.0.formatInCurrencyFormat())
+    private val _totalIncome: MutableLiveData<String> =
+        MutableLiveData(0.0.formatInCurrencyFormat())
+
     /* Live Data */
-    val totalExpenses : LiveData<Double>
-        get() = repository.totalExpenses
-    val totalIncome : LiveData<Double>
-        get() = repository.totalIncome
-    val month: LiveData<Month>
-        get() = this._month
+    val totalExpenses: LiveData<String>
+        get() = _totalExpenses
+    val totalIncome: LiveData<String>
+        get() = _totalIncome
+    val month: String = LocalDate.now().month.toString()
 
     init {
         // Load data
-        _month.value = repository.month
+        viewModelScope.launch {
+            var totalIncome: String
+            var totalExpenses: String
+            withContext(Dispatchers.Default) {
+                repository.getTransactions()
+                    .collect { transactionList ->
+                        totalExpenses = transactionList.filter { it.amount < 0.0 }.sumOf { it.amount }
+                            .formatInCurrencyFormat()
+                        totalIncome = transactionList.filter { it.amount > 0.0 }.sumOf { it.amount }
+                            .formatInCurrencyFormat()
+                    }
+
+
+//                _totalIncome.value = totalIncome
+//                _totalExpenses.value = totalExpenses
+            }
+        }
     }
+}
+
+sealed class HomeState {
+    data class Success(val transactionList: List<Transaction>) : HomeState()
+    data class Failure(val exception: Throwable) : HomeState()
+    object Loading : HomeState()
 }

@@ -1,17 +1,12 @@
 package com.mayurdw.bankstatementreader.data
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.mayurdw.bankstatementreader.data.csv.CsvParser
+import com.mayurdw.bankstatementreader.IRepository
 import com.mayurdw.bankstatementreader.model.Transaction
-import com.mayurdw.bankstatementreader.model.TransactionCategory
-import com.mayurdw.bankstatementreader.model.UnknownCategory
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.withContext
-import java.io.InputStream
 import java.time.Month
 
 /**
@@ -25,31 +20,19 @@ import java.time.Month
  *  - Setup UI Tests
  *  - Setup Dispatchers
  * */
-class Repository {
-    private val csvParser: CsvParser = CsvParser()
-    private val _totalIncome: MutableLiveData<Double> = MutableLiveData(0.0)
-    private val _totalExpenses: MutableLiveData<Double> = MutableLiveData(0.0)
+class Repository : IRepository {
+    private val transactionList: MutableStateFlow<MutableList<Transaction>> = MutableStateFlow(
+        mutableListOf()
+    )
 
-    val totalIncome : LiveData<Double>
-        get() = _totalIncome
-    val totalExpenses: LiveData<Double>
-        get() = _totalExpenses
-
-    val month: Month = Month.JULY
-
-    fun receivedFile(inputStream: InputStream) {
-        val csvItems = csvParser.getCsvItem(inputStream = inputStream)
-        val transactions : List<Transaction> = csvItems.map {
-            Transaction(
-                amount = it.amount,
-                date = it.date,
-                payee = it.payeeName,
-                memo = it.payMemo,
-                category = TransactionCategory.Unknown(UnknownCategory.UNKNOWN)
-            )
+    override suspend fun insertTransactions(transactionList: List<Transaction>) {
+        withContext(Dispatchers.Default){
+            this@Repository.transactionList.value.addAll(0, transactionList)
         }
-        _totalExpenses.value = transactions.filter { it.amount < 0.0 }.sumOf { it.amount }
-        _totalIncome.value = transactions.filter { it.amount > 0.0 }.sumOf { it.amount }
+    }
+
+    override suspend fun getTransactions(month: Month) : StateFlow<List<Transaction>> {
+        return transactionList
     }
 
 

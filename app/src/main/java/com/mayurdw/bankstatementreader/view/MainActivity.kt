@@ -15,6 +15,7 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
 import com.mayurdw.bankstatementreader.R
 import com.mayurdw.bankstatementreader.data.Repository
+import com.mayurdw.bankstatementreader.usecases.CsvParser
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -23,9 +24,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity @Inject constructor() : AppCompatActivity() {
-
-    @Inject
-    lateinit var repository: Repository
     private lateinit var previewRequest: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +50,11 @@ class MainActivity @Inject constructor() : AppCompatActivity() {
                     path?.let { filePath ->
                         val inputStream =
                             this@MainActivity.contentResolver.openInputStream(filePath)
-                            repository.receivedFile(inputStream = inputStream!!)
+                        inputStream?.let {
+                            lifecycleScope.launch {
+                                CsvParser().parse(inputStream)
+                            }
+                        }
                     }
                 }
             }

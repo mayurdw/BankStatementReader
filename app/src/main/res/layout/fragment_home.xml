@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.mayurdw.bankstatementreader.viewmodel.HomeViewModel" />
@@ -18,16 +19,16 @@
             android:id="@+id/month_switcher"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:orientation="horizontal"
+            android:weightSum="3"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            android:weightSum="3">
+            app:layout_constraintVertical_bias="0.0">
 
             <ImageButton
                 android:id="@+id/imageButton"
@@ -41,13 +42,13 @@
 
             <TextView
                 android:id="@+id/textView"
+                style="@style/TextAppearance.Material3.BodyMedium"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@{viewModel.month.name()}"
-                style="@style/TextAppearance.Material3.BodyMedium"
-                tools:text="March"/>
+                android:text="@{viewModel.month}"
+                tools:text="March" />
 
             <ImageButton
                 android:id="@+id/imageButton2"

@@ -1,5 +1,6 @@
 package com.mayurdw.bankstatementreader.data.csv
 
+import com.mayurdw.bankstatementreader.usecases.CsvParser
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
