@@ -23,8 +23,9 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainActivity @Inject constructor() : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
     private lateinit var previewRequest: ActivityResultLauncher<Intent>
+    @Inject lateinit var csvParser : CsvParser
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -52,7 +53,7 @@ class MainActivity @Inject constructor() : AppCompatActivity() {
                             this@MainActivity.contentResolver.openInputStream(filePath)
                         inputStream?.let {
                             lifecycleScope.launch {
-                                CsvParser().parse(inputStream)
+                                csvParser.parse(inputStream)
                             }
                         }
                     }

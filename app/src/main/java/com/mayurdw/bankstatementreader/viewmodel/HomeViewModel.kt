@@ -1,9 +1,6 @@
 package com.mayurdw.bankstatementreader.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.mayurdw.bankstatementreader.data.Repository
 import com.mayurdw.bankstatementreader.model.Transaction
 import com.mayurdw.bankstatementreader.util.formatInCurrencyFormat
@@ -27,16 +24,24 @@ class HomeViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
     /* MutableLiveData */
-    private val _totalExpenses: MutableLiveData<String> =
-        MutableLiveData(0.0.formatInCurrencyFormat())
-    private val _totalIncome: MutableLiveData<String> =
-        MutableLiveData(0.0.formatInCurrencyFormat())
+//    private val _totalExpenses: MutableLiveData<String> =
+//        MutableLiveData(0.0.formatInCurrencyFormat())
+//    private val _totalIncome: MutableLiveData<String> =
+//        MutableLiveData(0.0.formatInCurrencyFormat())
 
     /* Live Data */
-    val totalExpenses: LiveData<String>
-        get() = _totalExpenses
-    val totalIncome: LiveData<String>
-        get() = _totalIncome
+    val totalExpenses: LiveData<String> = liveData {
+        repository.getTransactions().collect { transactionList ->
+            emit(transactionList.filter { it.amount < 0.0 }.sumOf { it.amount }.formatInCurrencyFormat())
+        }
+    }
+
+    val totalIncome: LiveData<String> = liveData {
+        repository.getTransactions().collect() { transactionList ->
+            emit(transactionList.filter { it.amount > 0.0 }.sumOf{ it.amount }.formatInCurrencyFormat())
+        }
+    }
+
     val month: String = LocalDate.now().month.toString()
 
     init {

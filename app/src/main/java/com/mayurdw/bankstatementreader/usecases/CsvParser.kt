@@ -2,6 +2,7 @@ package com.mayurdw.bankstatementreader.usecases
 
 import androidx.annotation.VisibleForTesting
 import com.mayurdw.bankstatementreader.IRepository
+import com.mayurdw.bankstatementreader.data.Repository
 import com.mayurdw.bankstatementreader.data.csv.CsvItem
 import com.mayurdw.bankstatementreader.model.Transaction
 import com.mayurdw.bankstatementreader.model.TransactionCategory
@@ -18,9 +19,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-class CsvParser {
-    @Inject lateinit var repository: IRepository
-
+class CsvParser @Inject constructor(
+    private var repository: Repository
+) {
 
     suspend fun parse(
         inputStream: InputStream
