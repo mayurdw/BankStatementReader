@@ -1,6 +1,7 @@
-package com.mayurdw.bankstatementreader.data.csv
+package com.mayurdw.bankstatementreader.usecases
 
-import com.mayurdw.bankstatementreader.usecases.CsvParser
+import com.mayurdw.bankstatementreader.data.csv.CsvItem
+import com.mayurdw.bankstatementreader.data.csv.FakeFormattedCsvData
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -13,16 +14,12 @@ import java.time.Month
 internal class CsvParserTest {
 
     private val folder: TemporaryFolder = TemporaryFolder()
-    private lateinit var csvParser: CsvParser
     private lateinit var originalFile: File
-    private lateinit var newFile: File
 
     @Before
     fun setup() {
         this.folder.create()
-        this.csvParser = CsvParser()
         this.originalFile = this.folder.newFile("originalFile")
-        this.newFile = this.folder.newFile("editedFile")
     }
 
     @After
@@ -33,7 +30,7 @@ internal class CsvParserTest {
     @Test
     fun sanityTests() {
         assertTrue(
-            this.csvParser.getCsvItems(this.originalFile.bufferedReader()).isEmpty()
+            CsvParser.getCsvItems(this.originalFile.bufferedReader()).isEmpty()
         )
     }
 
@@ -43,7 +40,7 @@ internal class CsvParserTest {
                 "2022/06/08,2022060801,A/P,,\"CatSaver\",\"A/P rent\",-235.00")
 
 
-        val listOfCsvItem: List<CsvItem> = this.csvParser.getCsvItems(
+        val listOfCsvItem: List<CsvItem> = CsvParser.getCsvItems(
             bufferedReader = this.originalFile.bufferedReader()
         )
 
@@ -59,7 +56,7 @@ internal class CsvParserTest {
     @Test
     fun getCsvItems_fullFile_successful() {
         this.originalFile.writeText(FakeFormattedCsvData.csvString)
-        val listOfCsvItem: List<CsvItem> = this.csvParser.getCsvItems(
+        val listOfCsvItem: List<CsvItem> = CsvParser.getCsvItems(
             bufferedReader = this.originalFile.bufferedReader()
         )
 

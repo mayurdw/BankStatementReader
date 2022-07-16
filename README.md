@@ -9,12 +9,16 @@ Additionally, it should store old transaction records, use the past records to s
 
 - [x] Create Model for storing data
 
-- [] Handle TODOs first thing
+- [x] Handle TODOs first thing
 
-- [] Create Room Database
+- [x] Create Room Database
+
+- [x] Use cases for CSV Parsing?
+
+- [x] Put file reading operations in a coroutine
 
 - [] Create Fragment for confirming Transaction Type
 
-- [] Use cases for CSV Parsing?
+- [] Figure out how to make UI responsive to new file reads 
 
-- [] Put file reading operations in a coroutine
+- [] Figure out how to exclude known objects
