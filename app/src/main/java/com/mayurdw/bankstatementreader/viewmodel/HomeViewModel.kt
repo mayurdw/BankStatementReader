@@ -1,16 +1,18 @@
 package com.mayurdw.bankstatementreader.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.mayurdw.bankstatementreader.data.DataState
 import com.mayurdw.bankstatementreader.data.Repository
-import com.mayurdw.bankstatementreader.model.Transaction
 import com.mayurdw.bankstatementreader.util.formatInCurrencyFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.time.LocalDate
-import java.time.Month
 import javax.inject.Inject
 
 /**
@@ -23,51 +25,32 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
-    /* MutableLiveData */
-//    private val _totalExpenses: MutableLiveData<String> =
-//        MutableLiveData(0.0.formatInCurrencyFormat())
-//    private val _totalIncome: MutableLiveData<String> =
-//        MutableLiveData(0.0.formatInCurrencyFormat())
+    private val _totalExpenses: MutableLiveData<String> = MutableLiveData()
+    private val _totalIncome: MutableLiveData<String> = MutableLiveData()
 
-    /* Live Data */
-    val totalExpenses: LiveData<String> = liveData {
-        repository.getTransactions().collect { transactionList ->
-            emit(transactionList.filter { it.amount < 0.0 }.sumOf { it.amount }.formatInCurrencyFormat())
-        }
-    }
-
-    val totalIncome: LiveData<String> = liveData {
-        repository.getTransactions().collect() { transactionList ->
-            emit(transactionList.filter { it.amount > 0.0 }.sumOf{ it.amount }.formatInCurrencyFormat())
-        }
-    }
+    val totalExpenses: LiveData<String> = _totalExpenses
+    val totalIncome: LiveData<String> = _totalIncome
 
     val month: String = LocalDate.now().month.toString()
 
     init {
-        // Load data
         viewModelScope.launch {
-            var totalIncome: String
-            var totalExpenses: String
-            withContext(Dispatchers.Default) {
-                repository.getTransactions()
-                    .collect { transactionList ->
-                        totalExpenses = transactionList.filter { it.amount < 0.0 }.sumOf { it.amount }
-                            .formatInCurrencyFormat()
-                        totalIncome = transactionList.filter { it.amount > 0.0 }.sumOf { it.amount }
-                            .formatInCurrencyFormat()
+            repository.getTransactions().onEach { dataState ->
+                when (dataState) {
+                    is DataState.Success -> {
+                        _totalExpenses.value =
+                            dataState.data.filter { it.amount < 0.0 }.sumOf { it.amount }
+                                .formatInCurrencyFormat()
+                        _totalIncome.value =
+                            dataState.data.filter { it.amount > 0.0 }.sumOf { it.amount }
+                                .formatInCurrencyFormat()
                     }
-
-
-//                _totalIncome.value = totalIncome
-//                _totalExpenses.value = totalExpenses
+                    else -> {
+                        Timber.d("Unexpected value $dataState")
+                    }
+                }
             }
+                .launchIn(viewModelScope)
         }
     }
-}
-
-sealed class HomeState {
-    data class Success(val transactionList: List<Transaction>) : HomeState()
-    data class Failure(val exception: Throwable) : HomeState()
-    object Loading : HomeState()
 }

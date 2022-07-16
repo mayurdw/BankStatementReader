@@ -1,21 +1,9 @@
 package com.mayurdw.bankstatementreader.model
 
-sealed class TransactionCategory {
-    data class Income(val category: IncomeCategory) : TransactionCategory()
-    data class Expense(val expenseCategory: ExpenseCategory) : TransactionCategory()
-    data class Unknown(val unknown: UnknownCategory) : TransactionCategory()
-    data class Ignored(val ignored: IgnoredCategory) : TransactionCategory()
-}
-
-enum class IgnoredCategory {
-    IGNORED
-}
-
-enum class UnknownCategory {
-    UNKNOWN
-}
-
-enum class ExpenseCategory {
+enum class TransactionCategory {
+    IGNORED,
+    UNKNOWN,
+    // Expenses
     RENT,
     POWER,
     WATER,
@@ -31,9 +19,7 @@ enum class ExpenseCategory {
     GIFTS,
     VISA,
     INVESTMENT,
-}
-
-enum class IncomeCategory {
+    // Incomes
     SALARY,
     INTEREST,
     SELLING_STUFF,

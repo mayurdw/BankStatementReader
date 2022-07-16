@@ -1,12 +1,10 @@
 package com.mayurdw.bankstatementreader.usecases
 
 import androidx.annotation.VisibleForTesting
-import com.mayurdw.bankstatementreader.IRepository
 import com.mayurdw.bankstatementreader.data.Repository
 import com.mayurdw.bankstatementreader.data.csv.CsvItem
 import com.mayurdw.bankstatementreader.model.Transaction
 import com.mayurdw.bankstatementreader.model.TransactionCategory
-import com.mayurdw.bankstatementreader.model.UnknownCategory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.apache.commons.csv.CSVFormat
@@ -34,7 +32,7 @@ class CsvParser @Inject constructor(
                         date = csvItem.date,
                         payee = csvItem.payeeName,
                         memo = csvItem.payMemo,
-                        category = TransactionCategory.Unknown(UnknownCategory.UNKNOWN)
+                        category = TransactionCategory.UNKNOWN
                     )
                 }
             )
@@ -63,42 +61,43 @@ class CsvParser @Inject constructor(
         return bufferedReader
     }
 
-
-    @VisibleForTesting
-    fun getCsvItems(bufferedReader: BufferedReader): List<CsvItem> {
-        val csvParser = CSVParser(
-            bufferedReader,
-            CSVFormat.DEFAULT
-                .withFirstRecordAsHeader()
-                .withTrim()
-                .withIgnoreHeaderCase()
-                .withIgnoreEmptyLines()
-        )
-
-
-        val list: MutableList<CsvItem> = mutableListOf()
-
-        for (csvRecord in csvParser) {
-            val csvItem = CsvItem(
-                date = this.formatDate(csvRecord.get("Date")),
-                uniqueId = csvRecord.get("Unique Id").toInt(),
-                transType = csvRecord.get("Tran Type"),
-                chequeNumber = csvRecord.get("Cheque Number"),
-                payeeName = csvRecord.get("Payee").replace("\"", ""),
-                payMemo = csvRecord.get("Memo").replace("\"", ""),
-                amount = csvRecord.get("Amount").toDouble()
+    companion object {
+        @VisibleForTesting
+        fun getCsvItems(bufferedReader: BufferedReader): List<CsvItem> {
+            val csvParser = CSVParser(
+                bufferedReader,
+                CSVFormat.DEFAULT
+                    .withFirstRecordAsHeader()
+                    .withTrim()
+                    .withIgnoreHeaderCase()
+                    .withIgnoreEmptyLines()
             )
-            Timber.d("Adding $csvItem")
-            list.add(
-                csvItem
-            )
+
+
+            val list: MutableList<CsvItem> = mutableListOf()
+
+            for (csvRecord in csvParser) {
+                val csvItem = CsvItem(
+                    date = this.formatDate(csvRecord.get("Date")),
+                    uniqueId = csvRecord.get("Unique Id").toInt(),
+                    transType = csvRecord.get("Tran Type"),
+                    chequeNumber = csvRecord.get("Cheque Number"),
+                    payeeName = csvRecord.get("Payee").replace("\"", ""),
+                    payMemo = csvRecord.get("Memo").replace("\"", ""),
+                    amount = csvRecord.get("Amount").toDouble()
+                )
+                Timber.d("Adding $csvItem")
+                list.add(
+                    csvItem
+                )
+            }
+
+            return list
         }
 
-        return list
-    }
-
-    private fun formatDate(dateString: String): LocalDate {
-        val firstApiFormat = DateTimeFormatter.ofPattern("yyyy/MM/dd")
-        return LocalDate.parse(dateString, firstApiFormat)
+        private fun formatDate(dateString: String): LocalDate {
+            val firstApiFormat = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+            return LocalDate.parse(dateString, firstApiFormat)
+        }
     }
 }
