@@ -13,19 +13,25 @@ class RoomMapper @Inject constructor() : EntityMapper<TransactionDTO, Transactio
         return Transaction(
             amount = entity.amount,
             payee = entity.payee,
-            date = LocalDate.parse(entity.date, DateTimeFormatter.ofPattern("yyyy/MM/dd")),
+            date = LocalDate.parse(entity.date, DateTimeFormatter.ofPattern(DATE_FORMAT)),
             memo = entity.memo,
-            category = TransactionCategory.valueOf( entity.category )
+            category = TransactionCategory.valueOf( entity.category ),
+            uniqueId = entity.transactionID.toInt()
         )
     }
 
     override fun mapToEntity(domainModel: Transaction): TransactionDTO {
         return TransactionDTO(
+            transactionID = domainModel.uniqueId.toLong(),
             amount = domainModel.amount,
             payee = domainModel.payee,
             memo = domainModel.memo,
-            date = DateTimeFormatter.ofPattern("yyyy/MM/dd").format(domainModel.date),
+            date = DateTimeFormatter.ofPattern(DATE_FORMAT).format(domainModel.date),
             category = domainModel.category.toString()
         )
+    }
+
+    companion object {
+        private const val DATE_FORMAT = "yyyyMMdd"
     }
 }

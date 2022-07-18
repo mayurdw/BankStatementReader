@@ -6,6 +6,7 @@ import java.time.LocalDate
  * Need to figure out a way to make Transaction Category defined by users? Not sure if I want to do that
  **/
 data class Transaction(
+    val uniqueId: Int,
     val amount: Double,
     val date: LocalDate,
     val payee: String,
