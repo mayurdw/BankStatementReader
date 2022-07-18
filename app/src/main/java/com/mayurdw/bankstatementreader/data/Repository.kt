@@ -31,6 +31,8 @@ class Repository(
     }
 
     override suspend fun getTransactions(month: Month): Flow<DataState<List<Transaction>>> = flow {
-        emit(DataState.Success(roomMapper.mapFromEntities(transactionDao.getAllTransactions())))
+        transactionDao.getAllTransactions().collect{
+            emit(DataState.Success(roomMapper.mapFromEntities(it)))
+        }
     }
 }
