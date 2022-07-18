@@ -28,7 +28,7 @@ class CsvParser @Inject constructor(
             repository.insertTransactions(
                 getCsvItem(inputStream = inputStream).map { csvItem ->
                     Transaction(
-                        uniqueId = csvItem.uniqueId,
+                        uniqueId = csvItem.uniqueId + csvItem.amount.toInt() + csvItem.date.dayOfYear,
                         amount = csvItem.amount,
                         date = csvItem.date,
                         payee = csvItem.payeeName,
