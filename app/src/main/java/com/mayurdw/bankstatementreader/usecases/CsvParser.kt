@@ -27,8 +27,14 @@ class CsvParser @Inject constructor(
         withContext(Dispatchers.Default) {
             repository.insertTransactions(
                 getCsvItem(inputStream = inputStream).map { csvItem ->
+                    val uniqueId = (csvItem.uniqueId.toString()
+                            + csvItem.amount.toString()
+                            + csvItem.date.dayOfYear
+                            + csvItem.payMemo)
+                        .hashCode()
+
                     Transaction(
-                        uniqueId = csvItem.uniqueId + csvItem.amount.toInt() + csvItem.date.dayOfYear,
+                        uniqueId = uniqueId,
                         amount = csvItem.amount,
                         date = csvItem.date,
                         payee = csvItem.payeeName,
@@ -40,7 +46,7 @@ class CsvParser @Inject constructor(
         }
     }
 
-    private fun getCsvItem(inputStream: InputStream) : List<CsvItem> {
+    private fun getCsvItem(inputStream: InputStream): List<CsvItem> {
         val csvItems: List<CsvItem>
         var bufferedReader = BufferedReader(InputStreamReader(inputStream))
 
@@ -51,10 +57,10 @@ class CsvParser @Inject constructor(
         return csvItems
     }
 
-    private fun skipLines(bufferedReader: BufferedReader) : BufferedReader {
+    private fun skipLines(bufferedReader: BufferedReader): BufferedReader {
         var i = 0
 
-        while( i< 5){
+        while (i < 5) {
             bufferedReader.readLine()
             i++
         }
