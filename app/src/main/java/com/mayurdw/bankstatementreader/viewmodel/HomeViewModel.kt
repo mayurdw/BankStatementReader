@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mayurdw.bankstatementreader.data.DataState
 import com.mayurdw.bankstatementreader.data.Repository
+import com.mayurdw.bankstatementreader.model.Transaction
+import com.mayurdw.bankstatementreader.model.TransactionCategory
 import com.mayurdw.bankstatementreader.util.formatInCurrencyFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -27,9 +29,11 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     private val _totalExpenses: MutableLiveData<String> = MutableLiveData()
     private val _totalIncome: MutableLiveData<String> = MutableLiveData()
+    private val _unknownTransactions: MutableLiveData<List<Transaction>> = MutableLiveData(emptyList())
 
     val totalExpenses: LiveData<String> = _totalExpenses
     val totalIncome: LiveData<String> = _totalIncome
+val unknownTransactions: LiveData<List<Transaction>> = _unknownTransactions
 
     val month: String = LocalDate.now().month.toString()
 
@@ -44,6 +48,9 @@ class HomeViewModel @Inject constructor(
                         _totalIncome.value =
                             dataState.data.filter { it.amount > 0.0 }.sumOf { it.amount }
                                 .formatInCurrencyFormat()
+                        _unknownTransactions.value =
+                            dataState.data.filter { it.category == TransactionCategory.UNKNOWN }
+
                     }
                     else -> {
                         Timber.d("Unexpected value $dataState")

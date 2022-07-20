@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.mayurdw.bankstatementreader.R
 import com.mayurdw.bankstatementreader.databinding.FragmentHomeBinding
 import com.mayurdw.bankstatementreader.viewmodel.HomeViewModel
@@ -29,6 +30,10 @@ class HomeFragment : Fragment() {
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+
+        viewModel.unknownTransactions.observe(viewLifecycleOwner) { list ->
+            findNavController().navigate(R.id.enterTransactionCategoryFragment)
+        }
 
         return binding.root
     }

@@ -9,6 +9,16 @@
         android:id="@+id/homeFragment"
         android:name="com.mayurdw.bankstatementreader.view.HomeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/fragment_home"/>
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_enterTransactionCategoryFragment"
+            app:destination="@id/enterTransactionCategoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/enterTransactionCategoryFragment"
+        android:name="com.mayurdw.bankstatementreader.view.EnterTransactionCategoryFragment"
+        android:label="Enter Transaction Category"
+        tools:layout="@layout/fragment_enter_transaction_category" >
+    </fragment>
 
 </navigation>
